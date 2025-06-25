@@ -2,6 +2,7 @@ using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSaleStatus;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -81,6 +82,23 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> UpdateSaleStatus(Guid id, [FromBody] UpdateSaleStatusCommand command)
     {
         command.Id = id; // Ensure the ID from the route is used
+        var success = await _mediator.Send(command);
+        return success ? NoContent() : NotFound();
+    }
+
+    /// <summary>
+    /// Updates an existing sale.
+    /// </summary>
+    /// <param name="id">The ID of the sale to update.</param>
+    /// <param name="command">The command containing the updated sale details.</param>
+    /// <returns>No content if successful, or not found.</returns>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSale(Guid id, [FromBody] UpdateSaleCommand command)
+    {
+        command.Id = id;
         var success = await _mediator.Send(command);
         return success ? NoContent() : NotFound();
     }

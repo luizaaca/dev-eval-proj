@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 
@@ -27,5 +28,9 @@ public class SaleProfile : Profile
         // Mapeamentos para o caso de uso "GetSales"
         CreateMap<Sale, SaleSummaryDto>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+
+        // Mapeamentos para o caso de uso "UpdateSale"
+        CreateMap<UpdateSaleCommand, Sale>();
+        CreateMap<UpdateSaleItemDto, SaleItem>();
     }
 }

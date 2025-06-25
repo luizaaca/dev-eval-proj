@@ -2,13 +2,13 @@ using Ambev.DeveloperEvaluation.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-public class DomainEventHandler<TEvent> : INotificationHandler<TEvent>
+public class EventHandler<TEvent> : INotificationHandler<TEvent>
     where TEvent : INotification
 {
-    private readonly ILogger<DomainEventHandler<TEvent>> _logger;
+    private readonly ILogger<EventHandler<TEvent>> _logger;
     private readonly IEventPublisher _eventPublisher;
 
-    public DomainEventHandler(ILogger<DomainEventHandler<TEvent>> logger, IEventPublisher eventPublisher)
+    public EventHandler(ILogger<EventHandler<TEvent>> logger, IEventPublisher eventPublisher)
     {
         _logger = logger;
         _eventPublisher = eventPublisher;
