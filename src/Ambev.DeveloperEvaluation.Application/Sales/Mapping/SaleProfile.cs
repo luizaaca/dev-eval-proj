@@ -1,0 +1,31 @@
+using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using AutoMapper;
+
+namespace Ambev.DeveloperEvaluation.Application.Sales.Mapping;
+
+public class SaleProfile : Profile
+{
+    public SaleProfile()
+    {
+        CreateMap<CreateSaleCommand, Sale>()
+            // Ignoramos o mapeamento dos itens aqui porque o handler faz isso manualmente.
+            // Isso nos dá mais controle sobre a criação das entidades filhas.
+            .ForMember(dest => dest.Items, opt => opt.Ignore());
+
+        CreateMap<SaleItemCommand, SaleItem>();
+
+        CreateMap<Sale, CreateSaleResult>();
+        CreateMap<SaleItem, SaleItemResult>();
+
+        // Mapeamentos para o caso de uso "GetSaleById"
+        CreateMap<Sale, GetSaleByIdResult>();
+        CreateMap<SaleItem, SaleItemResultDto>();
+
+        // Mapeamentos para o caso de uso "GetSales"
+        CreateMap<Sale, SaleSummaryDto>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+    }
+}
