@@ -14,8 +14,7 @@ public class Sale : BaseEntity
     public decimal TotalAmount => Items.Sum(item => item.TotalAmount);
     public SaleStatus Status { get; set; } = SaleStatus.Active;
 
-    public bool CanBeDeleted()
-    {
-        return Status == SaleStatus.Cancelled;
-    }
+    public bool CanBeDeleted() => Status == SaleStatus.Cancelled;
+
+    public bool CanBeUpdated() => Status == SaleStatus.Active;
 }

@@ -25,15 +25,14 @@ public class UpdateSaleStatusHandler : IRequestHandler<UpdateSaleStatusCommand, 
             return false;
         }
 
-        // Aqui poderiam existir regras de negócio para a transição de status.
-        // Ex: Uma venda 'Concluída' não pode ser 'Cancelada'.
-        // if (sale.Status == SaleStatus.Completed && request.Status == SaleStatus.Canceled) return false;
-
+        if(sale.CanBeUpdated() == false)
+        {
+            throw new InvalidOperationException("Não é possível atualizar o status dessa venda.");
+        }
         sale.Status = request.Status;
 
         await _saleRepository.UpdateAsync(sale, cancellationToken);
 
-        // Publique o evento de atualização
         await _mediator.Publish(new SaleUpdatedEvent(sale), cancellationToken);
 
         return true;
