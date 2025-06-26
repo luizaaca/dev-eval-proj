@@ -26,7 +26,7 @@ public class SaleProfile : Profile
         CreateMap<SaleItem, SaleItemResultDto>();
 
         // Mapeamentos para o caso de uso "GetSales"
-        CreateMap<Sale, SaleSummaryDto>()
+        CreateMap<Sale, SaleItemDto>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
 
         // Mapeamentos para o caso de uso "UpdateSale"

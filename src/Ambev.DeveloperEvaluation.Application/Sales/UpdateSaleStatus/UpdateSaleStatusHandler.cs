@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -5,7 +6,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSaleStatus;
 
-public class UpdateSaleStatusHandler : IRequestHandler<UpdateSaleStatusCommand, bool>
+public class UpdateSaleStatusHandler : IRequestHandler<UpdateSaleStatusCommand, BaseResult<UpdateSaleStatusResult>>
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMediator _mediator;
@@ -16,25 +17,31 @@ public class UpdateSaleStatusHandler : IRequestHandler<UpdateSaleStatusCommand, 
         _mediator = mediator;
     }
 
-    public async Task<bool> Handle(UpdateSaleStatusCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResult<UpdateSaleStatusResult>> Handle(UpdateSaleStatusCommand request, CancellationToken cancellationToken)
     {
-        var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
-
-        if (sale is null)
+        try
         {
-            return false;
-        }
+            var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if(sale.CanBeUpdated() == false)
+            if (sale is null)
+                return BaseResult<UpdateSaleStatusResult>.Fail("Venda não encontrada.");
+
+            if (!sale.CanBeUpdated())
+                return BaseResult<UpdateSaleStatusResult>.Fail("Não é possível atualizar o status dessa venda.");
+
+            sale.Status = request.Status;
+            var updated = await _saleRepository.UpdateAsync(sale, cancellationToken);
+
+            if (!updated)
+                return BaseResult<UpdateSaleStatusResult>.Fail("Falha ao atualizar o status da venda.");
+
+            await _mediator.Publish(new SaleUpdatedEvent(sale), cancellationToken);
+
+            return BaseResult<UpdateSaleStatusResult>.Ok(new UpdateSaleStatusResult(true));
+        }
+        catch (Exception ex)
         {
-            throw new InvalidOperationException("Não é possível atualizar o status dessa venda.");
+            return BaseResult<UpdateSaleStatusResult>.Fail("Erro inesperado ao atualizar o status da venda: " + ex.Message, ex);
         }
-        sale.Status = request.Status;
-
-        await _saleRepository.UpdateAsync(sale, cancellationToken);
-
-        await _mediator.Publish(new SaleUpdatedEvent(sale), cancellationToken);
-
-        return true;
     }
 }

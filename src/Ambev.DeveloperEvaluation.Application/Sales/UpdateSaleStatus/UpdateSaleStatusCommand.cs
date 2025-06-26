@@ -1,12 +1,11 @@
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
-using System.Text.Json.Serialization;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSaleStatus;
 
-public class UpdateSaleStatusCommand : IRequest<bool>
+public class UpdateSaleStatusCommand : IRequest<BaseResult<UpdateSaleStatusResult>>
 {
-    [JsonIgnore] // O ID virá da rota, não do corpo da requisição.
     public Guid Id { get; set; }
     public SaleStatus Status { get; set; }
 }

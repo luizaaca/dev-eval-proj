@@ -1,13 +1,14 @@
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using MediatR;
 using Ambev.DeveloperEvaluation.Domain.Events; // Adicione este using
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 
-public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, bool>
+public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, BaseResult<DeleteSaleResult>>
 {
     private readonly ISaleRepository _saleRepository;
-    private readonly IMediator _mediator; // Injete o IMediator
+    private readonly IMediator _mediator;
 
     public DeleteSaleHandler(ISaleRepository saleRepository, IMediator mediator)
     {
@@ -15,24 +16,29 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, bool>
         _mediator = mediator;
     }
 
-    public async Task<bool> Handle(DeleteSaleCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResult<DeleteSaleResult>> Handle(DeleteSaleCommand request, CancellationToken cancellationToken)
     {
-        var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (sale is null)
+        try
         {
-            return false; 
-        }
+            var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
+            if (sale is null)
+                return BaseResult<DeleteSaleResult>.Fail("Venda não encontrada.");
 
-        if (!sale.CanBeDeleted())
-        {//mudar para domainException?
-            throw new InvalidOperationException("Venda não pode ser excluída");
-        }
+            if (!sale.CanBeDeleted())
+                return BaseResult<DeleteSaleResult>.Fail("Venda não pode ser excluída.");
 
-        var deleted = await _saleRepository.DeleteAsync(sale.Id, cancellationToken);
+            var deleted = await _saleRepository.DeleteAsync(sale.Id, cancellationToken);
 
-        if (deleted)
+            if (!deleted)
+                return BaseResult<DeleteSaleResult>.Fail("Falha ao excluir a venda.");
+
             await _mediator.Publish(new SaleDeletedEvent(sale.Id), cancellationToken);
 
-        return deleted;
+            return BaseResult<DeleteSaleResult>.Ok(new DeleteSaleResult(true));
+        }
+        catch (Exception ex)
+        {
+            return BaseResult<DeleteSaleResult>.Fail("Erro inesperado ao excluir a venda: " + ex.Message, ex);
+        }
     }
 }

@@ -32,7 +32,7 @@ public class Program
             builder.Services.AddDbContext<DefaultContext>(options =>
                 options.UseNpgsql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
+                    b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.Infrastructure")
                 )
             );
 
@@ -49,8 +49,6 @@ public class Program
                     typeof(Program).Assembly
                 );
             });
-
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             var app = builder.Build();
             app.UseMiddleware<ValidationExceptionMiddleware>();

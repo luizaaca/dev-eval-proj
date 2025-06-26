@@ -2,25 +2,23 @@ using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
-public class CreateSaleResult
-{
-    public Guid Id { get; set; }
-    public DateTime SaleDate { get; set; }
-    public Guid CustomerId { get; set; }
-    public string CustomerName { get; set; } = string.Empty;
-    public Guid BranchId { get; set; }
-    public string BranchName { get; set; } = string.Empty;
-    public List<SaleItemResult> Items { get; set; } = new List<SaleItemResult>();
-    public decimal TotalAmount { get; set; }
-    public SaleStatus Status { get; set; }
-}
+public record CreateSaleResult(
+    Guid Id,
+    DateTime SaleDate,
+    Guid CustomerId,
+    string CustomerName,
+    Guid BranchId,
+    string BranchName,
+    List<SaleItemResult> Items,
+    decimal TotalAmount,
+    SaleStatus Status
+);
 
-public class SaleItemResult
-{
-    public Guid ProductId { get; set; }
-    public string ProductName { get; set; } = string.Empty;
-    public int Quantity { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal Discount { get; set; }
-    public decimal TotalAmount { get; set; }
-}
+public record SaleItemResult(
+    Guid ProductId,
+    string ProductName,
+    int Quantity,
+    decimal UnitPrice,
+    decimal Discount,
+    decimal TotalAmount
+);

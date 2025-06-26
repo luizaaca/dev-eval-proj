@@ -1,20 +1,19 @@
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using Microsoft.Extensions.Logging;
 using AutoMapper;
 using MediatR;
-using Ambev.DeveloperEvaluation.Domain.Events; // Adicione este using
+using Ambev.DeveloperEvaluation.Domain.Events;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
 /// <summary>
 /// Handler for processing CreateSaleCommand requests
 /// </summary>
-public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleResult>
+public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<CreateSaleResult>>
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
-    private readonly ILogger<CreateSaleHandler> _logger;
     private readonly IMediator _mediator; // Injete o IMediator
 
     /// <summary>
@@ -25,12 +24,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     public CreateSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
-        ILogger<CreateSaleHandler> logger,
-        IMediator mediator) // Receba o IMediator por DI
+        IMediator mediator)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
-        _logger = logger;
         _mediator = mediator;
     }
 
@@ -40,23 +37,31 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     /// <param name="command">The CreateSale command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The created sale details</returns>
-    public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
+    public async Task<BaseResult<CreateSaleResult>> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
     {
-        // Mapeia o comando para a entidade de domínio Sale
-        var sale = _mapper.Map<Sale>(command);
-        foreach (var itemCommand in command.Items)
+        try
         {
-            var saleItem = _mapper.Map<SaleItem>(itemCommand);
-            sale.Items.Add(saleItem);
-        }
-        sale.Id = Guid.NewGuid();
+            // Mapeia o comando para a entidade de domínio Sale
+            var sale = _mapper.Map<Sale>(command);
+            foreach (var itemCommand in command.Items)
+            {
+                var saleItem = _mapper.Map<SaleItem>(itemCommand);
+                sale.Items.Add(saleItem);
+            }
+            sale.Id = Guid.NewGuid();
 
-        var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
-        if (createdSale)
+            var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
+            if (!createdSale)
+                return BaseResult<CreateSaleResult>.Fail("Falha ao criar a venda.");
+
             await _mediator.Publish(new SaleCreatedEvent(sale), cancellationToken);
 
-        var result = _mapper.Map<CreateSaleResult>(sale);
-
-        return result;
+            var result = _mapper.Map<CreateSaleResult>(sale);
+            return BaseResult<CreateSaleResult>.Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BaseResult<CreateSaleResult>.Fail("Erro inesperado ao criar a venda: " + ex.Message, ex);
+        }
     }
 }

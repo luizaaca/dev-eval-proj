@@ -1,4 +1,3 @@
-using Ambev.DeveloperEvaluation.Domain.Enums;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSaleStatus;

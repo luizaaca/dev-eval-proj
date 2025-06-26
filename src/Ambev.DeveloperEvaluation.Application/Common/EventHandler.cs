@@ -2,6 +2,8 @@ using Ambev.DeveloperEvaluation.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
+namespace Ambev.DeveloperEvaluation.Application.Common;
+
 public class EventHandler<TEvent> : INotificationHandler<TEvent>
     where TEvent : INotification
 {
@@ -16,7 +18,7 @@ public class EventHandler<TEvent> : INotificationHandler<TEvent>
 
     public async Task Handle(TEvent notification, CancellationToken cancellationToken)
     {
-        
+
         await _eventPublisher.PublishEventAsync(notification, cancellationToken);
     }
 }
