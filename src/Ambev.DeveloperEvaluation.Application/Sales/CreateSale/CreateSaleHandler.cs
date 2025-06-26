@@ -46,7 +46,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
             if (validationResult.Any())
             {
                 return BaseResult<CreateSaleResult>.Fail(
-                    "Erro de validação ao criar a venda: " + string.Join("; ", validationResult.Select(v => v.Detail))
+                    $"Erro de validação ao criar a venda:{Environment.NewLine}" + string.Join($"{Environment.NewLine}", validationResult.Select(v => v.Detail))
                 );
             }
             sale.Id = Guid.NewGuid();

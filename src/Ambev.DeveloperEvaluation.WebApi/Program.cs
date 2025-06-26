@@ -2,11 +2,9 @@ using Ambev.DeveloperEvaluation.Application;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
 using Ambev.DeveloperEvaluation.Common.Security;
-using Ambev.DeveloperEvaluation.Common.Validation;
-using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.Infrastructure;
+using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -30,10 +28,7 @@ public class Program
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<DefaultContext>(options =>
-                options.UseNpgsql(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.Infrastructure")
-                )
+                options.UseInMemoryDatabase("DevInMemoryDb")
             );
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -80,3 +75,4 @@ public class Program
         }
     }
 }
+

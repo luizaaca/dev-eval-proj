@@ -18,7 +18,6 @@ public class EventHandler<TEvent> : INotificationHandler<TEvent>
 
     public async Task Handle(TEvent notification, CancellationToken cancellationToken)
     {
-
         await _eventPublisher.PublishEventAsync(notification, cancellationToken);
     }
 }

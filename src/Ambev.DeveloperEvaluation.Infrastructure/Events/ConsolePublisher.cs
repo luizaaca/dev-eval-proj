@@ -1,7 +1,8 @@
-using Microsoft.Extensions.Logging;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Ambev.DeveloperEvaluation.Infrastructure.Events;
 public class ConsolePublisher : IEventPublisher
@@ -16,7 +17,10 @@ public class ConsolePublisher : IEventPublisher
     public Task PublishEventAsync(INotification newEvent, CancellationToken cancellationToken)
     {
         var eventName = newEvent.GetType().Name;
-        var eventJson = System.Text.Json.JsonSerializer.Serialize(newEvent);
+        var eventJson = JsonSerializer.Serialize(newEvent, newEvent.GetType(), new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        });
         _logger.LogInformation("Publishing event: {EventName}, Data: {EventData}", eventName, eventJson);
         return Task.CompletedTask;
     }
