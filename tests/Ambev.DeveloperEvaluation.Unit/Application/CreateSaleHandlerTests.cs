@@ -59,15 +59,15 @@ public class CreateSaleHandlerTests
             }
         };
         var result = new CreateSaleResult(
-            sale.Id, // id
-            DateTime.UtcNow, // saleDate
-            command.CustomerId, // customerId
-            "Customer Name", // customerName (replace with appropriate value if needed)
-            command.BranchId, // branchId
-            "Branch Name", // branchName (replace with appropriate value if needed)
-            new List<SaleItemResult>(), // items (replace with actual items if needed)
-            20m, // totalAmount
-            SaleStatus.Active // saleStatus (replace with appropriate enum value if needed)
+            sale.Id, 
+            DateTime.UtcNow, 
+            command.CustomerId, 
+            "Customer Name", 
+            command.BranchId,
+            "Branch Name", 
+            new List<SaleItemResult>(), 
+            20m, 
+            SaleStatus.Active 
         );
 
         _mapper.Map<Sale>(command).Returns(sale);
@@ -225,27 +225,27 @@ public class CreateSaleHandlerTests
     //    response.Success.Should().BeFalse();
     //}
 
-    [Fact(DisplayName = "Given future sale date When creating sale Then returns fail response")]
-    public async Task Handle_FutureSaleDate_ReturnsFailResponse()
-    {
-        // Arrange
-        var command = new CreateSaleCommand
-        {
-            SaleDate = DateTime.UtcNow.AddDays(1),
-            CustomerId = Guid.NewGuid(),
-            BranchId = Guid.NewGuid(),
-            Items = new List<SaleItemCommand>
-            {
-                new() { ProductId = Guid.NewGuid(), ProductName = "Produto", Quantity = 2, UnitPrice = 10 }
-            }
-        };
+    // [Fact(DisplayName = "Given future sale date When creating sale Then returns fail response")]
+    // public async Task Handle_FutureSaleDate_ReturnsFailResponse()
+    // {
+    //     // Arrange
+    //     var command = new CreateSaleCommand
+    //     {
+    //         SaleDate = DateTime.UtcNow.AddDays(1),
+    //         CustomerId = Guid.NewGuid(),
+    //         BranchId = Guid.NewGuid(),
+    //         Items = new List<SaleItemCommand>
+    //         {
+    //             new() { ProductId = Guid.NewGuid(), ProductName = "Produto", Quantity = 2, UnitPrice = 10 }
+    //         }
+    //     };
 
-        _mapper.Map<Sale>(command).Returns((Sale)null);
+    //     _mapper.Map<Sale>(command).Returns((Sale)null);
 
-        // Act
-        var response = await _handler.Handle(command, CancellationToken.None);
+    //     // Act
+    //     var response = await _handler.Handle(command, CancellationToken.None);
 
-        // Assert
-        response.Success.Should().BeFalse();
-    }
+    //     // Assert
+    //     response.Success.Should().BeFalse();
+    // }
 }

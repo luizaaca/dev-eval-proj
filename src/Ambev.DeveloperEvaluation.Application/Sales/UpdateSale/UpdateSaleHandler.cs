@@ -44,6 +44,14 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
                 ProductName = item.ProductName
             }).ToList();
 
+            var validationResult = await sale.ValidateAsync();
+            if (validationResult.Any())
+            {
+                return BaseResult<UpdateSaleResult>.Fail(
+                    "Erro de validação ao atualizar a venda: " + string.Join("; ", validationResult.Select(v => v.Detail))
+                );
+            }
+
             var updated = await _saleRepository.UpdateAsync(sale, cancellationToken);
             if (!updated)
                 return BaseResult<UpdateSaleResult>.Fail("Falha ao atualizar a venda.");

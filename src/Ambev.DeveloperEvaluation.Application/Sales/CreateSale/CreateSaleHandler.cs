@@ -42,6 +42,13 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
         try
         {
             var sale = _mapper.Map<Sale>(command);
+            var validationResult = await sale.ValidateAsync();
+            if (validationResult.Any())
+            {
+                return BaseResult<CreateSaleResult>.Fail(
+                    "Erro de validação ao criar a venda: " + string.Join("; ", validationResult.Select(v => v.Detail))
+                );
+            }
             sale.Id = Guid.NewGuid();
 
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);

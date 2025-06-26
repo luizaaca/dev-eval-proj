@@ -1,4 +1,6 @@
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -24,4 +26,20 @@ public class SaleItem : BaseEntity
     public decimal TotalAmount => (Quantity * UnitPrice) - Discount;
     public Guid SaleId { get; set; }
     public Sale Sale { get; set; } = null!;
+
+    public override async Task<IEnumerable<ValidationErrorDetail>> ValidateAsync()
+    {
+        var validator = new SaleItemValidator();
+
+        var validationResult = await validator.ValidateAsync(this);
+
+        if (validationResult.IsValid)
+            return Enumerable.Empty<ValidationErrorDetail>();
+
+        return validationResult.Errors.Select(error => new ValidationErrorDetail
+        {
+            Error = error.PropertyName,
+            Detail = error.ErrorMessage
+        });
+    }
 }

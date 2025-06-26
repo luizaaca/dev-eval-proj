@@ -25,7 +25,19 @@ public class UpdateSaleHandlerTests
     [Fact]
     public async Task Handle_ValidRequest_ReturnsSuccess()
     {
-        var command = new UpdateSaleCommand { Id = Guid.NewGuid(), CustomerId = Guid.NewGuid(), BranchId = Guid.NewGuid(), Items = new() };
+        var command = new UpdateSaleCommand
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = Guid.NewGuid(),
+            BranchId = Guid.NewGuid(),
+            Items = new List<UpdateSaleItemDto>
+            {
+                new UpdateSaleItemDto { ProductId = Guid.NewGuid(), Quantity = 2, UnitPrice = 10.0m, ProductName = "Product A" },
+                new UpdateSaleItemDto { ProductId = Guid.NewGuid(), Quantity = 1, UnitPrice = 20.0m, ProductName = "Product B" }
+
+            }
+        };
+        
         var sale = new Sale { Id = command.Id, CustomerId = command.CustomerId, BranchId = command.BranchId, Items = new List<SaleItem>() };
 
         _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>()).Returns(sale);

@@ -3,11 +3,11 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Domain.Common;
 
-public class BaseEntity : IComparable<BaseEntity>
+public abstract class BaseEntity : IComparable<BaseEntity>
 {
     public Guid Id { get; set; }
 
-    public Task<IEnumerable<ValidationErrorDetail>> ValidateAsync()
+    public virtual Task<IEnumerable<ValidationErrorDetail>> ValidateAsync()
     {
         return Validator.ValidateAsync(this);
     }
