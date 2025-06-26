@@ -1,7 +1,9 @@
 using Ambev.DeveloperEvaluation.Application.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Events; 
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Specifications;
 using MediatR;
-using Ambev.DeveloperEvaluation.Domain.Events; // Adicione este using
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 
@@ -9,11 +11,16 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, BaseResult<D
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMediator _mediator;
+    private readonly ISaleCanBeDeletedSpecification _saleCanBeDeletedSpecification;
 
-    public DeleteSaleHandler(ISaleRepository saleRepository, IMediator mediator)
+    public DeleteSaleHandler(
+        ISaleRepository saleRepository,
+        IMediator mediator,
+        ISaleCanBeDeletedSpecification saleCanBeDeletedSpecification)
     {
         _saleRepository = saleRepository;
         _mediator = mediator;
+        _saleCanBeDeletedSpecification = saleCanBeDeletedSpecification;
     }
 
     public async Task<BaseResult<DeleteSaleResult>> Handle(DeleteSaleCommand request, CancellationToken cancellationToken)
@@ -24,7 +31,7 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, BaseResult<D
             if (sale is null)
                 return BaseResult<DeleteSaleResult>.Fail("Venda não encontrada.");
 
-            if (!sale.CanBeDeleted())
+            if (!_saleCanBeDeletedSpecification.IsSatisfiedBy(sale))
                 return BaseResult<DeleteSaleResult>.Fail("Venda não pode ser excluída.");
 
             var deleted = await _saleRepository.DeleteAsync(sale.Id, cancellationToken);

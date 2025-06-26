@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Application.Common;
+using Ambev.DeveloperEvaluation.Domain.Specifications;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
@@ -10,11 +11,16 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMediator _mediator;
+    private readonly ISaleCanBeUpdatedSpecification _saleCanBeUpdatedSpecification;
 
-    public UpdateSaleHandler(ISaleRepository saleRepository, IMediator mediator)
+    public UpdateSaleHandler(
+        ISaleRepository saleRepository,
+        IMediator mediator,
+        ISaleCanBeUpdatedSpecification saleCanBeUpdatedSpecification)
     {
         _saleRepository = saleRepository;
         _mediator = mediator;
+        _saleCanBeUpdatedSpecification = saleCanBeUpdatedSpecification;
     }
 
     public async Task<BaseResult<UpdateSaleResult>> Handle(UpdateSaleCommand request, CancellationToken cancellationToken)
@@ -25,7 +31,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
             if (sale is null)
                 return BaseResult<UpdateSaleResult>.Fail("Venda não encontrada.");
 
-            if (!sale.CanBeUpdated())
+            if (!_saleCanBeUpdatedSpecification.IsSatisfiedBy(sale))
                 return BaseResult<UpdateSaleResult>.Fail("Venda não pode ser atualizada.");
 
             sale.CustomerId = request.CustomerId;
