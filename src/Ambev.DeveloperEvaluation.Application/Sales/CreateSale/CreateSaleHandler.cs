@@ -41,13 +41,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
     {
         try
         {
-            // Mapeia o comando para a entidade de domínio Sale
             var sale = _mapper.Map<Sale>(command);
-            foreach (var itemCommand in command.Items)
-            {
-                var saleItem = _mapper.Map<SaleItem>(itemCommand);
-                sale.Items.Add(saleItem);
-            }
             sale.Id = Guid.NewGuid();
 
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);

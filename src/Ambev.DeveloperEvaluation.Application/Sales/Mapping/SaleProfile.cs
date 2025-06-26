@@ -11,11 +11,7 @@ public class SaleProfile : Profile
 {
     public SaleProfile()
     {
-        CreateMap<CreateSaleCommand, Sale>()
-            // Ignoramos o mapeamento dos itens aqui porque o handler faz isso manualmente.
-            // Isso nos dá mais controle sobre a criação das entidades filhas.
-            .ForMember(dest => dest.Items, opt => opt.Ignore());
-
+        CreateMap<CreateSaleCommand, Sale>();
         CreateMap<SaleItemCommand, SaleItem>();
 
         CreateMap<Sale, CreateSaleResult>();
