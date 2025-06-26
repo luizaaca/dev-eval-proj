@@ -3,16 +3,13 @@ using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using Ambev.DeveloperEvaluation.Application.Sales.UpdateSaleStatus;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
-using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSaleStatus;
-using Ambev.DeveloperEvaluation.Application.Common;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -87,28 +84,6 @@ public class SalesController : ControllerBase
 
         var response = _mapper.Map<GetSalesResponse>(result.Data);
         return Ok(response);
-    }
-
-    /// <summary>
-    /// Updates the status of an existing sale.
-    /// </summary>
-    /// <param name="id">The ID of the sale to update.</param>
-    /// <param name="request">The request containing the new status.</param>
-    /// <returns>No content if successful, or not found.</returns>
-    [HttpPatch("{id:guid}/status")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateSaleStatus(Guid id, [FromBody] UpdateSaleStatusRequest request)
-    {
-        var command = _mapper.Map<UpdateSaleStatusCommand>(request);
-        command.Id = id;
-        var result = await _mediator.Send(command);
-
-        if (!result.Success)
-            return NotFound(result.Message);
-
-        return NoContent();
     }
 
     /// <summary>

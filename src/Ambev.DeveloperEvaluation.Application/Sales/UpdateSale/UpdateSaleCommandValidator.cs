@@ -19,8 +19,10 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
             .NotEmpty().WithMessage("BranchId is required.");
 
         RuleFor(x => x.Items)
-            .NotNull().WithMessage("Items are required.")
-            .Must(items => items.Count > 0).WithMessage("At least one item is required.");
+            .NotNull()
+            .WithMessage("Items are required.")
+            .Must((command, items) => items == null || items.Count > 0)
+            .WithMessage("At least one item is required.");
 
         RuleForEach(x => x.Items).SetValidator(new UpdateSaleItemDtoValidator());
     }

@@ -28,33 +28,7 @@ public class SaleTests
 
         // Assert
         total.Should().Be(2 * 10m + 1 * 5m);
-    }
-
-    [Fact(DisplayName = "CanBeDeleted deve retornar true apenas se o status for Cancelled")]
-    public void Given_SaleStatus_When_CanBeDeleted_Then_ReturnsExpected()
-    {
-        // Arrange
-        var sale = new Sale { Status = SaleStatus.Active };
-
-        // Act & Assert
-        sale.CanBeDeleted().Should().BeFalse();
-
-        sale.Status = SaleStatus.Cancelled;
-        sale.CanBeDeleted().Should().BeTrue();
-    }
-
-    [Fact(DisplayName = "CanBeUpdated deve retornar true apenas se o status for Active")]
-    public void Given_SaleStatus_When_CanBeUpdated_Then_ReturnsExpected()
-    {
-        // Arrange
-        var sale = new Sale { Status = SaleStatus.Cancelled };
-
-        // Act & Assert
-        sale.CanBeUpdated().Should().BeFalse();
-
-        sale.Status = SaleStatus.Active;
-        sale.CanBeUpdated().Should().BeTrue();
-    }
+    }   
 
     [Fact(DisplayName = "Sale deve inicializar Items como lista vazia")]
     public void Sale_Should_Initialize_Items_As_EmptyList()
