@@ -30,13 +30,13 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
 
             sale.CustomerId = request.CustomerId;
             sale.BranchId = request.BranchId;
-            sale.Items = [.. request.Items.Select(item => new SaleItem
+            sale.Items = request.Items.Select(item => new SaleItem
             {
                 ProductId = item.ProductId,
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 ProductName = item.ProductName
-            })];
+            }).ToList();
 
             var updated = await _saleRepository.UpdateAsync(sale, cancellationToken);
             if (!updated)

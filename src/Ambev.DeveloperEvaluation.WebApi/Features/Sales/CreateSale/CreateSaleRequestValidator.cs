@@ -1,4 +1,5 @@
 using FluentValidation;
+using System.Linq;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 
@@ -9,7 +10,7 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.BranchId).NotEmpty();
-        RuleFor(x => x.Items).NotNull().Must(i => i.Count > 0).WithMessage("At least one item is required.");
+        RuleFor(x => x.Items).NotNull().Must(i => i.Any()).WithMessage("At least one item is required.");
         RuleForEach(x => x.Items).SetValidator(new CreateSaleItemRequestValidator());
     }
 }

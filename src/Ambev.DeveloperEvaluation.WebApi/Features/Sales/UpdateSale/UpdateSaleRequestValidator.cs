@@ -9,7 +9,7 @@ public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.BranchId).NotEmpty();
-        RuleFor(x => x.Items).NotNull().Must(i => i.Count() > 0).WithMessage("At least one item is required.");
+        RuleFor(x => x.Items).NotNull().Must(i => i != null && i.Any()).WithMessage("At least one item is required.");
         RuleForEach(x => x.Items).SetValidator(new UpdateSaleItemRequestValidator());
     }
 }
