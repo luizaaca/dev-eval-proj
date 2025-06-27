@@ -58,13 +58,7 @@ This project is a Sales Management API built with .NET, following DDD principles
    git clone https://github.com/luizaaca/dev-eval-proj.git
    cd /dev-eval-proj
    ```
-2. **Run the application:**
-   ```sh
-   dotnet run
-   ```
-4. **Access the API:**
-   - Swagger UI: `https://localhost:7181/swagger`
-
+   
 ---
 
 ## How to Run
