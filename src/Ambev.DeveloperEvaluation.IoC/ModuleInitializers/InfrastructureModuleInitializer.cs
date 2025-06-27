@@ -25,7 +25,8 @@ public class InfrastructureModuleInitializer : IModuleInitializer
         {
             builder.Services.AddScoped<SaleRepository>();
             builder.Services.AddScoped<ISaleRepository>(sp =>
-                new CachedSaleRepository(sp.GetRequiredService<SaleRepository>(), sp.GetRequiredService<IMemoryCache>()));
+                new CachedSaleRepository(sp.GetRequiredService<SaleRepository>(), sp.GetRequiredService<IMemoryCache>(), sp.GetRequiredService<IConfiguration>())
+            );
         }
         else
         {
