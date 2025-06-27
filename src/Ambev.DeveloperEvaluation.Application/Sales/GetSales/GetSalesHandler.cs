@@ -30,7 +30,7 @@ public class GetSalesHandler : IRequestHandler<GetSalesQuery, BaseResult<GetSale
         }
         catch (Exception ex)
         {
-            return BaseResult<GetSalesResult>.Fail("Erro inesperado ao listar vendas: " + ex.Message, ex);
+            return BaseResult<GetSalesResult>.Fail("Unexpected error while listing sales: " + ex.Message, ex);
         }
     }
 }

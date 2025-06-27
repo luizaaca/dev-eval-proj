@@ -77,8 +77,6 @@ public class CachedSaleRepository : ISaleRepository
 
     private void RemoveSalesListCache()
     {
-        //This is an example: if we use other cache service as Redis, 
-        //we can reset by key prefix such as "sales_*"
         for (int page = 1; page <= 5; page++)
         {
             for (int size = 1; size <= 50; size += 10)

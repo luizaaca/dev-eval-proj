@@ -16,17 +16,20 @@ public class SaleRepository : ISaleRepository
     public async Task<bool> CreateAsync(Sale sale, CancellationToken cancellationToken)
     {
         await _context.Sales.AddAsync(sale, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0;
     }
 
     public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         return await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
     
     public async Task<(IEnumerable<Sale> sales, int totalCount)> ListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var query = _context.Sales.Include(s => s.Items).AsNoTracking();
 
         var totalCount = await query.CountAsync(cancellationToken);
@@ -38,6 +41,7 @@ public class SaleRepository : ISaleRepository
     public async Task<bool> UpdateAsync(Sale sale, CancellationToken cancellationToken)
     {
         _context.Sales.Update(sale);
+        cancellationToken.ThrowIfCancellationRequested();
         var result = await _context.SaveChangesAsync(cancellationToken);
         return result > 0;
     }
@@ -48,6 +52,7 @@ public class SaleRepository : ISaleRepository
         if (saleToDelete != null)
         {
             _context.Sales.Remove(saleToDelete);
+            cancellationToken.ThrowIfCancellationRequested();
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }

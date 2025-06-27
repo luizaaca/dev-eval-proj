@@ -45,10 +45,10 @@ public class DeleteSaleHandlerTests
         var response = await _handler.Handle(command, CancellationToken.None);
 
         response.Success.Should().BeFalse();
-        response.Message.Should().Contain("Venda não encontrada");
+        response.Message.Should().Contain("Sale not found");
     }
 
-    [Fact(DisplayName = "Handle deve negar exclusão se specification retornar false")]
+    [Fact(DisplayName = "Handle should deny deletion if specification returns false")]
     public async Task Handle_SpecificationDeniesDeletion_ReturnsFail()
     {
         var command = new DeleteSaleCommand(Guid.NewGuid());
@@ -60,10 +60,10 @@ public class DeleteSaleHandlerTests
         var response = await _handler.Handle(command, CancellationToken.None);
 
         response.Success.Should().BeFalse();
-        response.Message.Should().Contain("Venda não pode ser excluída.");
+        response.Message.Should().Contain("Sale cannot be deleted.");
     }
 
-    [Fact(DisplayName = "Handle deve retornar falha se exclusão no repositório falhar")]
+    [Fact(DisplayName = "Handle should return fail if repository deletion fails")]
     public async Task Handle_RepositoryDeleteFails_ReturnsFail()
     {
         var command = new DeleteSaleCommand(Guid.NewGuid());
@@ -76,10 +76,10 @@ public class DeleteSaleHandlerTests
         var response = await _handler.Handle(command, CancellationToken.None);
 
         response.Success.Should().BeFalse();
-        response.Message.Should().Contain("Falha ao excluir");
+        response.Message.Should().Contain("Failed to delete");
     }
 
-    [Fact(DisplayName = "Handle deve chamar specification para verificar permissão de exclusão")]
+    [Fact(DisplayName = "Handle should call specification to check delete permission")]
     public async Task Handle_ShouldCallSpecificationToCheckDeletePermission()
     {
         var command = new DeleteSaleCommand(Guid.NewGuid());

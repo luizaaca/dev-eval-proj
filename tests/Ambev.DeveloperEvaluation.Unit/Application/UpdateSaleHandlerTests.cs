@@ -70,10 +70,10 @@ public class UpdateSaleHandlerTests
         var response = await _handler.Handle(command, CancellationToken.None);
 
         response.Success.Should().BeFalse();
-        response.Message.Should().Contain("Venda não encontrada");
+        response.Message.Should().Contain("Sale not found");
     }
 
-    [Fact(DisplayName = "Handle deve negar atualização se specification retornar false")]
+    [Fact(DisplayName = "Handle should deny update if specification returns false")]
     public async Task Handle_SpecificationNotSatisfied_ReturnsFail()
     {
         // Arrange
@@ -100,7 +100,7 @@ public class UpdateSaleHandlerTests
 
         // Assert
         response.Success.Should().BeFalse();
-        response.Message.Should().Contain("Venda não pode ser atualizada.");
+        response.Message.Should().Contain("Sale cannot be updated.");
     }
 
 }

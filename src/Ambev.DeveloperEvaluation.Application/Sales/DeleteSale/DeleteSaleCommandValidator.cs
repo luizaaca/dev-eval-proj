@@ -7,6 +7,6 @@ public class DeleteSaleCommandValidator : AbstractValidator<DeleteSaleCommand>
     public DeleteSaleCommandValidator()
     {
         RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("O ID da venda não pode ser vazio.");
+            .NotEmpty().WithMessage("Sale ID cannot be empty.");
     }
 }

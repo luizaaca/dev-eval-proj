@@ -30,16 +30,16 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
         {
             var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
             if (sale is null)
-                return BaseResult<UpdateSaleResult>.Fail("Venda não encontrada.");
+                return BaseResult<UpdateSaleResult>.Fail("Sale not found.");
 
             if (!_saleCanBeUpdatedSpecification.IsSatisfiedBy(sale))
-                return BaseResult<UpdateSaleResult>.Fail("Venda não pode ser atualizada.");
+                return BaseResult<UpdateSaleResult>.Fail("Sale cannot be updated.");
 
             sale.CustomerId = request.CustomerId;
             sale.BranchId = request.BranchId;
 
             if (!Enum.TryParse<SaleStatus>(request.Status, out var saleStatus))
-                return BaseResult<UpdateSaleResult>.Fail("Status da venda inválido.");
+                return BaseResult<UpdateSaleResult>.Fail("Invalid sale status.");
             sale.Status = saleStatus;
 
             sale.Items = request.Items.Select(item => new SaleItem
@@ -54,13 +54,13 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
             if (validationResult.Any())
             {
                 return BaseResult<UpdateSaleResult>.Fail(
-                    "Erro de validação ao atualizar a venda: " + string.Join("; ", validationResult.Select(v => v.Detail))
+                    "Validation error while updating the sale: " + string.Join("; ", validationResult.Select(v => v.Detail))
                 );
             }
 
             var updated = await _saleRepository.UpdateAsync(sale, cancellationToken);
             if (!updated)
-                return BaseResult<UpdateSaleResult>.Fail("Falha ao atualizar a venda.");
+                return BaseResult<UpdateSaleResult>.Fail("Failed to update the sale.");
 
             await _mediator.Publish(new SaleUpdatedEvent(sale), cancellationToken);
 
@@ -68,7 +68,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
         }
         catch (Exception ex)
         {
-            return BaseResult<UpdateSaleResult>.Fail("Erro inesperado ao atualizar a venda: " + ex.Message, ex);
+            return BaseResult<UpdateSaleResult>.Fail("Unexpected error while updating the sale: " + ex.Message, ex);
         }
     }
 }

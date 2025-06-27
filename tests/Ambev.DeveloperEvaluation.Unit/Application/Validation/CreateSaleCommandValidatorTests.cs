@@ -16,15 +16,15 @@ public class CreateSaleCommandValidatorTests
         {
             Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
-            CustomerName = "Cliente Teste",
+            CustomerName = "Test Customer",
             BranchId = Guid.NewGuid(),
-            BranchName = "Filial Teste",
+            BranchName = "Test Branch",
             Items = new List<SaleItemCommand>
             {
                 new SaleItemCommand
                 {
                     ProductId = Guid.NewGuid(),
-                    ProductName = "Produto Teste",
+                    ProductName = "Test Product",
                     Quantity = 2,
                     UnitPrice = 10
                 }
@@ -42,9 +42,9 @@ public class CreateSaleCommandValidatorTests
         {
             Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
-            CustomerName = "Cliente Teste",
+            CustomerName = "Test Customer",
             BranchId = Guid.NewGuid(),
-            BranchName = "Filial Teste",
+            BranchName = "Test Branch",
             Items = new List<SaleItemCommand>()
         };
 
@@ -61,13 +61,13 @@ public class CreateSaleCommandValidatorTests
             CustomerId = Guid.NewGuid(),
             CustomerName = new string('A', 151),
             BranchId = Guid.NewGuid(),
-            BranchName = "Filial Teste",
+            BranchName = "Test Branch",
             Items = new List<SaleItemCommand>
             {
                 new SaleItemCommand
                 {
                     ProductId = Guid.NewGuid(),
-                    ProductName = "Produto Teste",
+                    ProductName = "Test Product",
                     Quantity = 2,
                     UnitPrice = 10
                 }
@@ -85,15 +85,15 @@ public class CreateSaleCommandValidatorTests
         {
             Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
-            CustomerName = "Cliente Teste",
+            CustomerName = "Test Customer",
             BranchId = Guid.NewGuid(),
-            BranchName = "Filial Teste",
+            BranchName = "Test Branch",
             Items = new List<SaleItemCommand>
             {
                 new SaleItemCommand
                 {
                     ProductId = Guid.NewGuid(),
-                    ProductName = "Produto Teste",
+                    ProductName = "Test Product",
                     Quantity = 0,
                     UnitPrice = 10
                 }

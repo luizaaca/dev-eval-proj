@@ -46,14 +46,14 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
             if (validationResult.Any())
             {
                 return BaseResult<CreateSaleResult>.Fail(
-                    $"Erro de validação ao criar a venda:{Environment.NewLine}" + string.Join($"{Environment.NewLine}", validationResult.Select(v => v.Detail))
+                    $"Validation error while creating the sale:{Environment.NewLine}" + string.Join($"{Environment.NewLine}", validationResult.Select(v => v.Detail))
                 );
             }
             sale.Id = Guid.NewGuid();
 
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
             if (!createdSale)
-                return BaseResult<CreateSaleResult>.Fail("Falha ao criar a venda.");
+                return BaseResult<CreateSaleResult>.Fail("Failed to create the sale.");
 
             await _mediator.Publish(new SaleCreatedEvent(sale), cancellationToken);
 
@@ -62,7 +62,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
         }
         catch (Exception ex)
         {
-            return BaseResult<CreateSaleResult>.Fail("Erro inesperado ao criar a venda: " + ex.Message, ex);
+            return BaseResult<CreateSaleResult>.Fail("Unexpected error while creating the sale: " + ex.Message, ex);
         }
     }
 }

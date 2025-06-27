@@ -28,15 +28,15 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, BaseResult<D
         {
             var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
             if (sale is null)
-                return BaseResult<DeleteSaleResult>.Fail("Venda não encontrada.");
+                return BaseResult<DeleteSaleResult>.Fail("Sale not found.");
 
             if (!_saleCanBeDeletedSpecification.IsSatisfiedBy(sale))
-                return BaseResult<DeleteSaleResult>.Fail("Venda não pode ser excluída.");
+                return BaseResult<DeleteSaleResult>.Fail("Sale cannot be deleted.");
 
             var deleted = await _saleRepository.DeleteAsync(sale.Id, cancellationToken);
 
             if (!deleted)
-                return BaseResult<DeleteSaleResult>.Fail("Falha ao excluir a venda.");
+                return BaseResult<DeleteSaleResult>.Fail("Failed to delete the sale.");
 
             await _mediator.Publish(new SaleDeletedEvent(sale.Id), cancellationToken);
 
@@ -44,7 +44,7 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, BaseResult<D
         }
         catch (Exception ex)
         {
-            return BaseResult<DeleteSaleResult>.Fail("Erro inesperado ao excluir a venda: " + ex.Message, ex);
+            return BaseResult<DeleteSaleResult>.Fail("Unexpected error while deleting the sale: " + ex.Message, ex);
         }
     }
 }

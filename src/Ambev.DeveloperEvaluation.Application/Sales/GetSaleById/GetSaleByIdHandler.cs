@@ -23,14 +23,14 @@ public class GetSaleByIdHandler : IRequestHandler<GetSaleByIdQuery, BaseResult<G
             var sale = await _saleRepository.GetByIdAsync(request.Id, cancellationToken);
 
             if (sale == null)
-                return BaseResult<GetSaleByIdResult>.Fail("Venda não encontrada.");
+                return BaseResult<GetSaleByIdResult>.Fail("Sale not found.");
 
             var result = _mapper.Map<GetSaleByIdResult>(sale);
             return BaseResult<GetSaleByIdResult>.Ok(result);
         }
         catch (Exception ex)
         {
-            return BaseResult<GetSaleByIdResult>.Fail("Erro inesperado ao buscar venda: " + ex.Message, ex);
+            return BaseResult<GetSaleByIdResult>.Fail("Unexpected error while fetching sale: " + ex.Message, ex);
         }
     }
 }
