@@ -4,6 +4,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
 using Ambev.DeveloperEvaluation.Domain.Events;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
@@ -42,13 +43,8 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
         try
         {
             var sale = _mapper.Map<Sale>(command);
-            var validationResult = await sale.ValidateAsync();
-            if (validationResult.Any())
-            {
-                return BaseResult<CreateSaleResult>.Fail(
-                    $"Validation error while creating the sale:{Environment.NewLine}" + string.Join($"{Environment.NewLine}", validationResult.Select(v => v.Detail))
-                );
-            }
+            await sale.ValidateAsync();
+            
             sale.Id = Guid.NewGuid();
 
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
@@ -59,6 +55,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, BaseResult<C
 
             var result = _mapper.Map<CreateSaleResult>(sale);
             return BaseResult<CreateSaleResult>.Ok(result);
+        }
+        catch (ValidationException ex)
+        {
+            throw ex;
         }
         catch (Exception ex)
         {

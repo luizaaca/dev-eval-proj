@@ -5,6 +5,7 @@ using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Specifications;
 using Ambev.DeveloperEvaluation.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
@@ -50,13 +51,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
                 ProductName = item.ProductName
             }).ToList();
 
-            var validationResult = await sale.ValidateAsync();
-            if (validationResult.Any())
-            {
-                return BaseResult<UpdateSaleResult>.Fail(
-                    "Validation error while updating the sale: " + string.Join("; ", validationResult.Select(v => v.Detail))
-                );
-            }
+            await sale.ValidateAsync();
 
             var updated = await _saleRepository.UpdateAsync(sale, cancellationToken);
             if (!updated)
@@ -66,6 +61,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
 
             return BaseResult<UpdateSaleResult>.Ok(new UpdateSaleResult(true));
         }
+        catch (ValidationException ex) { throw ex; }
         catch (Exception ex)
         {
             return BaseResult<UpdateSaleResult>.Fail("Unexpected error while updating the sale: " + ex.Message, ex);

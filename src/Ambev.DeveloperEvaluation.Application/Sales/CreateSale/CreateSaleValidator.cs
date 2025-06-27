@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
-public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
+public class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
 {
-    public CreateSaleCommandValidator()
+    public CreateSaleValidator()
     {
         RuleFor(x => x.Date)
             .NotEmpty().WithMessage("Sale date is required.")

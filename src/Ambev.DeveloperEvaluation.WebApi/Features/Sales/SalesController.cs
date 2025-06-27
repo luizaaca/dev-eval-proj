@@ -41,7 +41,7 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(command);
 
         if (!result.Success)
-        {
+        {           
             return BadRequest(new ApiResponse
             {
                 Success = false,

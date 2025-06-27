@@ -1,7 +1,7 @@
-using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -16,19 +16,13 @@ public class Sale : BaseEntity
     public decimal TotalAmount => Items.Sum(item => item.TotalAmount);
     public SaleStatus Status { get; set; } = SaleStatus.Active;
 
-    public override async Task<IEnumerable<ValidationErrorDetail>> ValidateAsync()
+    public async Task ValidateAsync()
     {
         var validator = new SaleValidator();
 
         var validationResult = await validator.ValidateAsync(this);
 
-        if (validationResult.IsValid)
-            return Enumerable.Empty<ValidationErrorDetail>();
-
-        return validationResult.Errors.Select(error => new ValidationErrorDetail
-        {
-            Error = error.PropertyName, 
-            Detail = error.ErrorMessage
-        });
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
     }
 }

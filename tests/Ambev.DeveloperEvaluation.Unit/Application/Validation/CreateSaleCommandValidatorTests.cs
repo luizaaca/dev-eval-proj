@@ -7,7 +7,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application.Validation;
 
 public class CreateSaleCommandValidatorTests
 {
-    private readonly CreateSaleCommandValidator _validator = new();
+    private readonly CreateSaleValidator _validator = new();
 
     [Fact]
     public void Should_Be_Valid_For_ValidData()

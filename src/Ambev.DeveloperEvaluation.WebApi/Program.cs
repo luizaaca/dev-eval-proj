@@ -5,6 +5,7 @@ using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Infrastructure;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -44,6 +45,7 @@ public class Program
                     typeof(Program).Assembly
                 );
             });
+            builder.Services.AddValidatorsFromAssemblyContaining<ApplicationLayer>();
 
             var app = builder.Build();
             app.UseMiddleware<ValidationExceptionMiddleware>();
