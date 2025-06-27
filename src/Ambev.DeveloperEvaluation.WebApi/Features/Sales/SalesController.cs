@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSales;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
@@ -40,10 +41,22 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(command);
 
         if (!result.Success)
-            return BadRequest(result.Message);
+        {
+            return BadRequest(new ApiResponseWithData<CreateSaleResponse>
+            {
+                Success = false,
+                Message = result.Message!,
+                Data = null
+            });
+        }
 
         var response = _mapper.Map<CreateSaleResponse>(result.Data);
-        return CreatedAtAction(nameof(GetSaleById), new { id = response.Id }, response);
+        return Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
+        {
+            Success = true,
+            Message = "Sale created successfully",
+            Data = response
+        });
     }
 
     /// <summary>
@@ -60,10 +73,20 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(query);
 
         if (!result.Success || result.Data == null)
-            return NotFound(result.Message);
+            return NotFound(new ApiResponseWithData<GetSaleByIdResponse>
+            {
+                Success = false,
+                Message = result.Message!,
+                Data = null
+            });
 
         var response = _mapper.Map<GetSaleByIdResponse>(result.Data);
-        return Ok(response);
+        return Ok(new ApiResponseWithData<GetSaleByIdResponse>
+        {
+            Success = true,
+            Message = "Sale fetched successfully",
+            Data = response
+        });
     }
 
     /// <summary>
@@ -80,10 +103,20 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(query);
 
         if (!result.Success)
-            return BadRequest(result.Message);
+            return BadRequest(new ApiResponseWithData<GetSalesResponse>
+            {
+                Success = false,
+                Message = result.Message!,
+                Data = null
+            });
 
         var response = _mapper.Map<GetSalesResponse>(result.Data);
-        return Ok(response);
+        return Ok(new ApiResponseWithData<GetSalesResponse>
+        {
+            Success = true,
+            Message = "Sales fetched successfully",
+            Data = response
+        });
     }
 
     /// <summary>
@@ -93,7 +126,7 @@ public class SalesController : ControllerBase
     /// <param name="request">The request containing the updated sale details.</param>
     /// <returns>No content if successful, or not found.</returns>
     [HttpPut("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateSale(Guid id, [FromBody] UpdateSaleRequest request)
@@ -103,9 +136,19 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(command);
 
         if (!result.Success)
-            return NotFound(result.Message);
+            return NotFound(new ApiResponseWithData<object>
+            {
+                Success = false,
+                Message = result.Message!,
+                Data = null
+            });
 
-        return NoContent();
+        return Ok(new ApiResponseWithData<object>
+        {
+            Success = true,
+            Message = "Sale updated successfully",
+            Data = null
+        });
     }
 
     /// <summary>
@@ -114,7 +157,7 @@ public class SalesController : ControllerBase
     /// <param name="id">The ID of the sale to delete.</param>
     /// <returns>No content if successful, or not found.</returns>
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSale(Guid id)
     {
@@ -122,8 +165,18 @@ public class SalesController : ControllerBase
         var result = await _mediator.Send(command);
 
         if (!result.Success)
-            return NotFound(result.Message);
+            return NotFound(new ApiResponseWithData<object>
+            {
+                Success = false,
+                Message = result.Message!,
+                Data = null
+            });
 
-        return NoContent();
+        return Ok(new ApiResponseWithData<object>
+        {
+            Success = true,
+            Message = "Sale deleted successfully",
+            Data = null
+        });
     }
 }
