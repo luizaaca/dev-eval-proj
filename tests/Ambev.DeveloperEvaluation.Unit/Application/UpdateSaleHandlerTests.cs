@@ -29,7 +29,11 @@ public class UpdateSaleHandlerTests
         {
             Id = Guid.NewGuid(),
             CustomerId = Guid.NewGuid(),
+            CustomerName = "Customer Name",
+            Date = DateTime.UtcNow,
             BranchId = Guid.NewGuid(),
+            BranchName = "Branch Name",
+            Status = "Active",
             Items = new List<UpdateSaleItemDto>
             {
                 new UpdateSaleItemDto { ProductId = Guid.NewGuid(), Quantity = 2, UnitPrice = 10.0m, ProductName = "Product A" },
@@ -38,7 +42,15 @@ public class UpdateSaleHandlerTests
             }
         };
         
-        var sale = new Sale { Id = command.Id, CustomerId = command.CustomerId, BranchId = command.BranchId, Items = new List<SaleItem>() };
+        var sale = new Sale { 
+            Id = command.Id, 
+            CustomerId = command.CustomerId, 
+            CustomerName = command.CustomerName,
+            Date = command.Date,
+            BranchId = command.BranchId,
+            BranchName = command.BranchName,
+            Status = DeveloperEvaluation.Domain.Enums.SaleStatus.Active,
+            Items = new List<SaleItem>() };
 
         _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>()).Returns(sale);
         _saleRepository.UpdateAsync(sale, Arg.Any<CancellationToken>()).Returns(true);

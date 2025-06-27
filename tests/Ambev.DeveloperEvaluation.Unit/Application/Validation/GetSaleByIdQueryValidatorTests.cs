@@ -3,7 +3,7 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace Ambev.DeveloperEvaluation.Unit.Domain.Validation;
+namespace Ambev.DeveloperEvaluation.Unit.Application.Validation;
 
 public class GetSaleByIdQueryValidatorTests
 {

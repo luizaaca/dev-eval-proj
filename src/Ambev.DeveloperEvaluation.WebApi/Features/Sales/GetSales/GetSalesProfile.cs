@@ -8,7 +8,8 @@ public class GetSalesProfile : Profile
     public GetSalesProfile()
     {
         CreateMap<GetSalesResult, GetSalesResponse>();
-        CreateMap<SaleItemDto, GetSalesItemResponse>();
+        CreateMap<SaleDto, GetSaleResponse>();
+        CreateMap<SaleItemDto, GetSaleItemResponse>();
         CreateMap<GetSalesRequest, GetSalesQuery>();
     }
 }

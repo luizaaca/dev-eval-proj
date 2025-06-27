@@ -33,20 +33,24 @@ public class CreateSaleHandlerTests
         // Arrange
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
+            CustomerName = "Customer Name",
             BranchId = Guid.NewGuid(),
+            BranchName = "Branch Name",
             Items = new List<SaleItemCommand>
             {
-                new() { ProductId = Guid.NewGuid(), ProductName = "Produto", Quantity = 2, UnitPrice = 10 }
+                new() { ProductId = Guid.NewGuid(), ProductName = "Product", Quantity = 2, UnitPrice = 10 }
             }
         };
         var sale = new Sale()
         {
             Id = Guid.NewGuid(),
-            SaleDate = command.SaleDate,
+            Date = command.Date,
             CustomerId = command.CustomerId,
+            CustomerName = command.CustomerName,
             BranchId = command.BranchId,
+            BranchName = command.BranchName,
             Items = new List<SaleItem>()
             {
                 new SaleItem
@@ -67,7 +71,7 @@ public class CreateSaleHandlerTests
             "Branch Name", 
             new List<SaleItemResult>(), 
             20m, 
-            SaleStatus.Active 
+            SaleStatus.Active.ToString()
         );
 
         _mapper.Map<Sale>(command).Returns(sale);
@@ -90,15 +94,35 @@ public class CreateSaleHandlerTests
         // Arrange
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
+            CustomerName = "Customer Name",
             BranchId = Guid.NewGuid(),
+            BranchName = "Branch Name",
             Items = new List<SaleItemCommand>
             {
-                new() { ProductId = Guid.NewGuid(), ProductName = "Produto", Quantity = 2, UnitPrice = 10 }
+                new() { ProductId = Guid.NewGuid(), ProductName = "Product", Quantity = 2, UnitPrice = 10 }
             }
         };
-        var sale = new Sale();
+        var sale = new Sale()
+        {
+            Id = Guid.NewGuid(),
+            Date = command.Date,
+            CustomerId = command.CustomerId,
+            CustomerName = command.CustomerName,
+            BranchId = command.BranchId,
+            BranchName = command.BranchName,
+            Items = new List<SaleItem>()
+            {
+                new SaleItem
+                {
+                    ProductId = command.Items[0].ProductId,
+                    ProductName = command.Items[0].ProductName,
+                    Quantity = command.Items[0].Quantity,
+                    UnitPrice = command.Items[0].UnitPrice
+                }
+            }
+        };
 
         _mapper.Map<Sale>(command).Returns(sale);
         _saleRepository.CreateAsync(sale, Arg.Any<CancellationToken>()).Returns(false);
@@ -117,7 +141,7 @@ public class CreateSaleHandlerTests
         // Arrange
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
             Items = new List<SaleItemCommand>()
@@ -138,7 +162,7 @@ public class CreateSaleHandlerTests
         // Arrange
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
             Items = new List<SaleItemCommand>
@@ -162,7 +186,7 @@ public class CreateSaleHandlerTests
         // Arrange
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
             Items = new List<SaleItemCommand>

@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Domain.Enums;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
@@ -17,6 +18,14 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
 
         RuleFor(x => x.BranchId)
             .NotEmpty().WithMessage("BranchId is required.");
+
+        RuleFor(x => x.BranchName).NotEmpty()
+            .WithMessage("BranchName is required.");
+
+        RuleFor(x => x.Status).NotEmpty()
+            .WithMessage("Status is required.")
+            .Must(status => Enum.TryParse(status, out SaleStatus _))
+            .WithMessage("Invalid status value.");
 
         RuleFor(x => x.Items)
             .NotNull()
@@ -41,9 +50,6 @@ public class UpdateSaleItemDtoValidator : AbstractValidator<UpdateSaleItemDto>
 
         RuleFor(x => x.UnitPrice)
             .GreaterThan(0).WithMessage("UnitPrice must be greater than zero.");
-
-        RuleFor(x => x.Discount)
-            .GreaterThanOrEqualTo(0).WithMessage("Discount cannot be negative.");
 
         RuleFor(x => x.ProductName)
             .NotEmpty().WithMessage("ProductName is required.");

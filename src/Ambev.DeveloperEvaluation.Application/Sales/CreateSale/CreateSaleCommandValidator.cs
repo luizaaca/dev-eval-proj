@@ -6,8 +6,9 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
 {
     public CreateSaleCommandValidator()
     {
-        RuleFor(x => x.SaleDate)
-            .NotEmpty().WithMessage("Sale date is required.");
+        RuleFor(x => x.Date)
+            .NotEmpty().WithMessage("Sale date is required.")
+            .GreaterThan(DateTime.MinValue).WithMessage("Sale date must be greater than the minimum value.");
 
         RuleFor(x => x.CustomerId)
             .NotEmpty().WithMessage("Customer ID is required.");

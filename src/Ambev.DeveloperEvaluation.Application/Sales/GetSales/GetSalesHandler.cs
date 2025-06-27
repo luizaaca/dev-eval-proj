@@ -22,7 +22,7 @@ public class GetSalesHandler : IRequestHandler<GetSalesQuery, BaseResult<GetSale
         {
             var (sales, totalCount) = await _saleRepository.ListAsync(request.PageNumber, request.PageSize, cancellationToken);
 
-            var saleDtos = _mapper.Map<List<SaleItemDto>>(sales);
+            var saleDtos = _mapper.Map<List<SaleDto>>(sales);           
 
             var result = new GetSalesResult(saleDtos, request.PageNumber, request.PageSize, totalCount);
 

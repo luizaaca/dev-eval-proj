@@ -13,5 +13,12 @@ public class SaleItemValidator : AbstractValidator<SaleItem>
 
         RuleFor(item => item.UnitPrice)
             .GreaterThan(0).WithMessage("Unit price must be greater than zero.");        
+
+        RuleFor(item => item.ProductName).NotNull().WithMessage("Product name cannot be null.")
+            .NotEmpty().WithMessage("Product name cannot be empty.")
+            .MaximumLength(100).WithMessage("Product name cannot exceed 100 characters.");
+
+        RuleFor(item => item.ProductId).NotEmpty().WithMessage("Product ID cannot be empty.")
+            .NotNull().WithMessage("Product ID cannot be null.");
     }
 }

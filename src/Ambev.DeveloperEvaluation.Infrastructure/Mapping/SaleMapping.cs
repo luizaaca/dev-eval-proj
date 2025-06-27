@@ -12,7 +12,7 @@ public class SaleMapping : IEntityTypeConfiguration<Sale>
 
         builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.SaleDate)
+        builder.Property(s => s.Date)
             .IsRequired();
 
         builder.Property(s => s.CustomerName)

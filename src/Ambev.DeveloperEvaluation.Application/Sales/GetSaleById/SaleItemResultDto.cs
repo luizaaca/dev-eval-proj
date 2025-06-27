@@ -1,6 +1,6 @@
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 
-public class SaleItemResultDto
+public record SaleItemResultDto
 {
     public Guid ProductId { get; set; }
     public string ProductName { get; set; } = string.Empty;

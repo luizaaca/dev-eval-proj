@@ -4,6 +4,7 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Specifications;
+using Ambev.DeveloperEvaluation.Domain.Enums;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
@@ -36,6 +37,11 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, BaseResult<U
 
             sale.CustomerId = request.CustomerId;
             sale.BranchId = request.BranchId;
+
+            if (!Enum.TryParse<SaleStatus>(request.Status, out var saleStatus))
+                return BaseResult<UpdateSaleResult>.Fail("Status da venda inválido.");
+            sale.Status = saleStatus;
+
             sale.Items = request.Items.Select(item => new SaleItem
             {
                 ProductId = item.ProductId,

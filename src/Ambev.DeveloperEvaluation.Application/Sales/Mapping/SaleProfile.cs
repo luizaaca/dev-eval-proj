@@ -17,15 +17,13 @@ public class SaleProfile : Profile
         CreateMap<Sale, CreateSaleResult>();
         CreateMap<SaleItem, SaleItemResult>();
 
-        // Mapeamentos para o caso de uso "GetSaleById"
         CreateMap<Sale, GetSaleByIdResult>();
         CreateMap<SaleItem, SaleItemResultDto>();
 
-        // Mapeamentos para o caso de uso "GetSales"
-        CreateMap<Sale, SaleItemDto>()
+        CreateMap<Sale, SaleDto>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+        CreateMap<SaleItem, SaleItemDto>();
 
-        // Mapeamentos para o caso de uso "UpdateSale"
         CreateMap<UpdateSaleCommand, Sale>();
         CreateMap<UpdateSaleItemDto, SaleItem>();
     }

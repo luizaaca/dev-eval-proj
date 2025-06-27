@@ -3,7 +3,7 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace Ambev.DeveloperEvaluation.Unit.Domain.Validation;
+namespace Ambev.DeveloperEvaluation.Unit.Application.Validation;
 
 public class UpdateSaleCommandValidatorTests
 {
@@ -16,8 +16,11 @@ public class UpdateSaleCommandValidatorTests
         {
             Id = Guid.NewGuid(),
             CustomerId = Guid.NewGuid(),
+            CustomerName = "Customer Name",
             Date = DateTime.UtcNow,
             BranchId = Guid.NewGuid(),
+            BranchName = "Branch Name",
+            Status = "Active",
             Items = new List<UpdateSaleItemDto>
             {
                 new UpdateSaleItemDto
@@ -25,8 +28,7 @@ public class UpdateSaleCommandValidatorTests
                     ProductId = Guid.NewGuid(),
                     ProductName = "Produto Teste",
                     Quantity = 2,
-                    UnitPrice = 10,
-                    Discount = 0
+                    UnitPrice = 10
                 }
             }
         };

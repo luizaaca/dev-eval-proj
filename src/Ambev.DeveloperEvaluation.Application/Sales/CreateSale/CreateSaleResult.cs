@@ -1,17 +1,15 @@
-using Ambev.DeveloperEvaluation.Domain.Enums;
-
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
 public record CreateSaleResult(
     Guid Id,
-    DateTime SaleDate,
+    DateTime Date,
     Guid CustomerId,
     string CustomerName,
     Guid BranchId,
     string BranchName,
     List<SaleItemResult> Items,
     decimal TotalAmount,
-    SaleStatus Status
+    string Status
 );
 
 public record SaleItemResult(

@@ -3,7 +3,7 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using Xunit;
 
-namespace Ambev.DeveloperEvaluation.Unit.Domain.Validation;
+namespace Ambev.DeveloperEvaluation.Unit.Application.Validation;
 
 public class CreateSaleCommandValidatorTests
 {
@@ -14,7 +14,7 @@ public class CreateSaleCommandValidatorTests
     {
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             CustomerName = "Cliente Teste",
             BranchId = Guid.NewGuid(),
@@ -40,7 +40,7 @@ public class CreateSaleCommandValidatorTests
     {
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             CustomerName = "Cliente Teste",
             BranchId = Guid.NewGuid(),
@@ -57,7 +57,7 @@ public class CreateSaleCommandValidatorTests
     {
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             CustomerName = new string('A', 151),
             BranchId = Guid.NewGuid(),
@@ -83,7 +83,7 @@ public class CreateSaleCommandValidatorTests
     {
         var command = new CreateSaleCommand
         {
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             CustomerId = Guid.NewGuid(),
             CustomerName = "Cliente Teste",
             BranchId = Guid.NewGuid(),

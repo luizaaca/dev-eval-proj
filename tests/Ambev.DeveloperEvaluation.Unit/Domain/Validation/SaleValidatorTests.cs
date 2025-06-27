@@ -15,8 +15,10 @@ public class SaleValidatorTests
         var sale = new Sale
         {
             CustomerId = Guid.NewGuid(),
+            CustomerName = "Customer Name",
             BranchId = Guid.NewGuid(),
-            SaleDate = DateTime.UtcNow,
+            BranchName = "Branch Name",
+            Date = DateTime.UtcNow,
             Items = new List<SaleItem>
             {
                 new SaleItem
@@ -41,7 +43,7 @@ public class SaleValidatorTests
         {
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             Items = new List<SaleItem>()
         };
 
@@ -57,7 +59,7 @@ public class SaleValidatorTests
         {
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             Items = null
         };
 
@@ -73,7 +75,7 @@ public class SaleValidatorTests
         {
             CustomerId = Guid.NewGuid(),
             BranchId = Guid.NewGuid(),
-            SaleDate = DateTime.UtcNow,
+            Date = DateTime.UtcNow,
             Items = new List<SaleItem>
             {
                 new SaleItem
