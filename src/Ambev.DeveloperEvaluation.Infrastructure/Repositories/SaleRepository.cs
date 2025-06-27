@@ -24,12 +24,7 @@ public class SaleRepository : ISaleRepository
     {
         return await _context.Sales.Include(s => s.Items).FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
-
-    public async Task<IEnumerable<Sale>> ListAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Sales.Include(s => s.Items).AsNoTracking().ToListAsync(cancellationToken);
-    }
-
+    
     public async Task<(IEnumerable<Sale> sales, int totalCount)> ListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         var query = _context.Sales.Include(s => s.Items).AsNoTracking();
